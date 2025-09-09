@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Manga Artist Dashboard</title>
+  <title>2D Animation Dashboard</title>
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
       font-family: 'Segoe UI', sans-serif;
     }
 
     body {
-      background: #f4f4f4;
+      background: #f2f3f5;
       padding: 20px;
       color: #333;
     }
@@ -24,14 +24,14 @@
     }
 
     .search-bar {
-      max-width: 400px;
-      margin: 0 auto 30px auto;
       display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
     }
 
     .search-bar input {
-      width: 100%;
       padding: 10px;
+      width: 300px;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
@@ -46,42 +46,43 @@
       background: #fff;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: 0.3s ease;
       cursor: pointer;
     }
 
     .card:hover {
-      transform: scale(1.03);
+      transform: translateY(-5px);
     }
 
     .card h3 {
       margin-bottom: 10px;
-      color: #222;
     }
 
     .card p {
+      color: #555;
       font-size: 14px;
-      color: #666;
     }
 
-    /* Modal */
+    /* Modal Styles */
     .modal {
+      display: none;
       position: fixed;
       top: 0; left: 0;
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       background: rgba(0,0,0,0.6);
-      display: none;
       justify-content: center;
       align-items: center;
+      z-index: 1000;
     }
 
     .modal-content {
       background: white;
       padding: 30px;
-      border-radius: 10px;
+      border-radius: 8px;
+      max-width: 600px;
       width: 90%;
-      max-width: 500px;
       position: relative;
     }
 
@@ -91,7 +92,6 @@
 
     .modal-content ul {
       padding-left: 20px;
-      list-style-type: disc;
     }
 
     .close-btn {
@@ -102,7 +102,7 @@
       color: white;
       border: none;
       padding: 5px 10px;
-      border-radius: 4px;
+      border-radius: 3px;
       cursor: pointer;
     }
 
@@ -115,90 +115,93 @@
 </head>
 <body>
 
-  <h1>Manga Artists & Their Collections</h1>
+  <h1>2D Animation Projects Dashboard</h1>
 
   <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search artists...">
+    <input type="text" id="searchInput" placeholder="Search animations...">
   </div>
 
-  <div class="grid" id="artistGrid">
-    <!-- Cards will be injected by JS -->
+  <div class="grid" id="animationGrid">
+    <!-- Cards rendered by JS -->
   </div>
 
   <!-- Modal -->
   <div class="modal" id="modal">
-    <div class="modal-content" id="modalContent">
+    <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">Close</button>
       <h2 id="modalTitle"></h2>
-      <p><strong>Notable Works:</strong></p>
+      <p id="modalDescription"></p>
+      <p><strong>Techniques:</strong></p>
       <ul id="modalList"></ul>
     </div>
   </div>
 
   <script>
-    const artists = [
+    const animations = [
       {
-        name: "Eiichiro Oda",
-        bio: "Creator of the record-breaking series One Piece.",
-        works: ["One Piece", "Wanted!", "Romance Dawn"]
+        title: "Spirited Away",
+        description: "A magical journey by Studio Ghibli exploring spirit realms.",
+        techniques: ["Traditional hand-drawn", "Background painting", "Cel animation"]
       },
       {
-        name: "Masashi Kishimoto",
-        bio: "Best known for the Naruto series.",
-        works: ["Naruto", "Samurai 8", "Karakuri"]
+        title: "Avatar: The Last Airbender",
+        description: "Epic fantasy series blending martial arts with elemental powers.",
+        techniques: ["Digital 2D animation", "Frame-by-frame", "Hybrid anime-western style"]
       },
       {
-        name: "Akira Toriyama",
-        bio: "Legendary creator behind Dragon Ball.",
-        works: ["Dragon Ball", "Dr. Slump", "Cowa!"]
+        title: "The Iron Giant",
+        description: "Classic 2D animated sci-fi with heartwarming story.",
+        techniques: ["Hand-drawn", "Digital ink and paint", "2D & 3D compositing"]
       },
       {
-        name: "Naoko Takeuchi",
-        bio: "Famous for creating Sailor Moon.",
-        works: ["Sailor Moon", "Codename: Sailor V", "Love Call"]
+        title: "Klaus",
+        description: "Modern Christmas tale with a groundbreaking 2D style.",
+        techniques: ["Hand-drawn animation", "Lighting simulation", "2D rigging"]
       },
       {
-        name: "Kentaro Miura",
-        bio: "Known for the dark fantasy epic Berserk.",
-        works: ["Berserk", "King of Wolves", "Japan"]
+        title: "Rick and Morty",
+        description: "Adult sci-fi comedy with wild interdimensional travel.",
+        techniques: ["Digital 2D", "Rig-based animation", "Flash-style character movement"]
       },
       {
-        name: "Tite Kubo",
-        bio: "Renowned for Bleach.",
-        works: ["Bleach", "Burn the Witch", "Zombiepowder."]
+        title: "Arcane (Stylized 2D Look)",
+        description: "A 3D show with 2D painted aesthetics.",
+        techniques: ["2D painted textures", "Hybrid pipeline", "Stylized VFX"]
       }
     ];
 
-    const grid = document.getElementById('artistGrid');
+    const grid = document.getElementById('animationGrid');
     const searchInput = document.getElementById('searchInput');
     const modal = document.getElementById('modal');
     const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
     const modalList = document.getElementById('modalList');
 
     function renderCards(filter = "") {
       grid.innerHTML = "";
-      const filtered = artists.filter(artist => 
-        artist.name.toLowerCase().includes(filter.toLowerCase())
+      const filtered = animations.filter(animation =>
+        animation.title.toLowerCase().includes(filter.toLowerCase())
       );
 
-      filtered.forEach(artist => {
+      filtered.forEach(animation => {
         const card = document.createElement('div');
-        card.className = "card";
+        card.className = 'card';
         card.innerHTML = `
-          <h3>${artist.name}</h3>
-          <p>${artist.bio}</p>
+          <h3>${animation.title}</h3>
+          <p>${animation.description}</p>
         `;
-        card.onclick = () => openModal(artist);
+        card.onclick = () => openModal(animation);
         grid.appendChild(card);
       });
     }
 
-    function openModal(artist) {
-      modalTitle.innerText = artist.name;
-      modalList.innerHTML = "";
-      artist.works.forEach(work => {
+    function openModal(animation) {
+      modalTitle.innerText = animation.title;
+      modalDescription.innerText = animation.description;
+      modalList.innerHTML = '';
+      animation.techniques.forEach(tech => {
         const li = document.createElement('li');
-        li.innerText = work;
+        li.textContent = tech;
         modalList.appendChild(li);
       });
       modal.style.display = "flex";
