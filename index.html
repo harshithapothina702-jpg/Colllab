@@ -3,220 +3,132 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>2D Animation Dashboard</title>
+  <title>Dashboard Sketch</title>
   <style>
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: "Segoe UI", sans-serif;
     }
 
     body {
-      background: #f2f3f5;
-      padding: 20px;
-      color: #333;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .search-bar {
       display: flex;
-      justify-content: center;
-      margin-bottom: 30px;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f4f6f8;
     }
 
-    .search-bar input {
-      padding: 10px;
-      width: 300px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+    header {
+      background-color: #2f3e46;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 1.5rem;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
+    .container {
+      display: flex;
+      flex: 1;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #354f52;
+      color: white;
+      padding: 1rem;
+    }
+
+    .sidebar h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      margin: 10px 0;
+      cursor: pointer;
+    }
+
+    .sidebar ul li:hover {
+      color: #90e0ef;
+    }
+
+    .main {
+      flex: 1;
+      padding: 2rem;
     }
 
     .card {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      transition: 0.3s ease;
-      cursor: pointer;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .card h3 {
-      margin-bottom: 10px;
-    }
-
-    .card p {
-      color: #555;
-      font-size: 14px;
-    }
-
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
       background: white;
-      padding: 30px;
+      padding: 1rem;
       border-radius: 8px;
-      max-width: 600px;
-      width: 90%;
-      position: relative;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    .modal-content h2 {
-      margin-bottom: 15px;
+    .chart-placeholder {
+      width: 100%;
+      height: 300px;
+      background: #caf0f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #0077b6;
+      margin-top: 1rem;
     }
 
-    .modal-content ul {
-      padding-left: 20px;
-    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
 
-    .close-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-
-    @media (max-width: 600px) {
-      .card {
-        padding: 15px;
+      .sidebar {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
 
-  <h1>2D Animation Projects Dashboard</h1>
+  <header>
+    Dashboard Sketch
+  </header>
 
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search animations...">
-  </div>
+  <div class="container">
+    <div class="sidebar">
+      <h2>Menu</h2>
+      <ul>
+        <li onclick="updateContent('Overview')">Overview</li>
+        <li onclick="updateContent('Analytics')">Analytics</li>
+        <li onclick="updateContent('Reports')">Reports</li>
+        <li onclick="updateContent('Settings')">Settings</li>
+      </ul>
+    </div>
 
-  <div class="grid" id="animationGrid">
-    <!-- Cards rendered by JS -->
-  </div>
-
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <button class="close-btn" onclick="closeModal()">Close</button>
-      <h2 id="modalTitle"></h2>
-      <p id="modalDescription"></p>
-      <p><strong>Techniques:</strong></p>
-      <ul id="modalList"></ul>
+    <div class="main">
+      <div class="card">
+        <h3 id="contentTitle">Welcome</h3>
+        <div class="chart-placeholder" id="chartArea">
+          Chart / Widget Placeholder
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    const animations = [
-      {
-        title: "Spirited Away",
-        description: "A magical journey by Studio Ghibli exploring spirit realms.",
-        techniques: ["Traditional hand-drawn", "Background painting", "Cel animation"]
-      },
-      {
-        title: "Avatar: The Last Airbender",
-        description: "Epic fantasy series blending martial arts with elemental powers.",
-        techniques: ["Digital 2D animation", "Frame-by-frame", "Hybrid anime-western style"]
-      },
-      {
-        title: "The Iron Giant",
-        description: "Classic 2D animated sci-fi with heartwarming story.",
-        techniques: ["Hand-drawn", "Digital ink and paint", "2D & 3D compositing"]
-      },
-      {
-        title: "Klaus",
-        description: "Modern Christmas tale with a groundbreaking 2D style.",
-        techniques: ["Hand-drawn animation", "Lighting simulation", "2D rigging"]
-      },
-      {
-        title: "Rick and Morty",
-        description: "Adult sci-fi comedy with wild interdimensional travel.",
-        techniques: ["Digital 2D", "Rig-based animation", "Flash-style character movement"]
-      },
-      {
-        title: "Arcane (Stylized 2D Look)",
-        description: "A 3D show with 2D painted aesthetics.",
-        techniques: ["2D painted textures", "Hybrid pipeline", "Stylized VFX"]
-      }
-    ];
+    function updateContent(section) {
+      const title = document.getElementById("contentTitle");
+      const chart = document.getElementById("chartArea");
 
-    const grid = document.getElementById('animationGrid');
-    const searchInput = document.getElementById('searchInput');
-    const modal = document.getElementById('modal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDescription = document.getElementById('modalDescription');
-    const modalList = document.getElementById('modalList');
+      title.textContent = section;
 
-    function renderCards(filter = "") {
-      grid.innerHTML = "";
-      const filtered = animations.filter(animation =>
-        animation.title.toLowerCase().includes(filter.toLowerCase())
-      );
-
-      filtered.forEach(animation => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <h3>${animation.title}</h3>
-          <p>${animation.description}</p>
-        `;
-        card.onclick = () => openModal(animation);
-        grid.appendChild(card);
-      });
+      // Simple placeholder update
+      chart.textContent = `Displaying ${section} data...`;
     }
-
-    function openModal(animation) {
-      modalTitle.innerText = animation.title;
-      modalDescription.innerText = animation.description;
-      modalList.innerHTML = '';
-      animation.techniques.forEach(tech => {
-        const li = document.createElement('li');
-        li.textContent = tech;
-        modalList.appendChild(li);
-      });
-      modal.style.display = "flex";
-    }
-
-    function closeModal() {
-      modal.style.display = "none";
-    }
-
-    searchInput.addEventListener('input', () => {
-      renderCards(searchInput.value);
-    });
-
-    // Initial render
-    renderCards();
   </script>
 
 </body>
